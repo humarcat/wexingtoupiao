@@ -1,0 +1,2 @@
+#-----------------添加记录表--- kj_vote_item
+INSERT INTO `{DB_PRE}vote_item` (`item_id`,`item_title`,`item_cont`,`item_start_time`,`item_end_time`,`item_pic`,`item_day_limit`,`item_share`,`item_isrepeat`,`item_limit`,`item_ping`,`item_pics`,`item_addtime`,`item_award`,`item_login`,`item_footer`) values('1','小小画家','ssssssss\ndddddd\ndddddddd','2016-06-14 00:00:00','2019-11-12 00:00:00','/webcss/default/img/top.jpg','2','1','1','100','XXHJ','/webcss/default/img/top.jpg','1465715865','1','0','主办：微商互联  协办：快捷cms');

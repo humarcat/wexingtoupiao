@@ -1,0 +1,1 @@
+alter table {DB_PRE}vote_act engine innodb;

@@ -1,0 +1,88 @@
+{include(header)}
+<style>
+.me_div1{float:left;width:500px}
+.me_div1 li{line-height:25px;float:left;width:500px;padding-bottom:10px;line-height:35px}
+.me_div2{float:left;clear:both}
+</style>
+<script>
+//保存时交验规则
+admin.rule['save'] =[];
+
+</script>
+<div class="pMenu" id="id_pMenu">
+	<li class="sel">基本信息</li>
+</div>
+<div class="pMain" id="id_main">
+<table class='pEditTable'>
+<tr class='pTabTitRow'><td class='pTabTitCol' colspan="2"></td></tr>
+<tr>
+	<td class="pTabColName">标&nbsp;&nbsp;题：</td><td class="pTabColVal"><input type="text" name="item_title" value="{$editinfo['item_title']}" class='pTxt1 pTxtL300' ruletips="活动标题不能为空" ruletipsmode=1 required> <span style="color:#ff0000">*</span></td></tr>
+<tr>
+	<td class="pTabColName">开始时间：</td><td class="pTabColVal"><input type="text" name="item_start_time" value="{$editinfo['item_start_time']}" class='pTxt1 pTxtL150' ruletips="活动开始时间不能为空" ruletipsmode=1 required onfocus="new Calendar().show(this);"> <span style="color:#ff0000">*</span></td></tr>
+<tr>
+	<td class="pTabColName">结束时间：</td><td class="pTabColVal"><input type="text" name="item_end_time" value="{$editinfo['item_end_time']}" class='pTxt1 pTxtL150' ruletips="活动结束时间不能为空" ruletipsmode=1 required onfocus="new Calendar().show(this);"> <span style="color:#ff0000">*</span></td></tr>
+<tr>
+	<td class="pTabColName">投票总限制：</td><td class="pTabColVal"><input type="text" name="item_limit" value="{$editinfo['item_limit']}" class='pTxt1 pTxtL150'>&nbsp;<span class="pBeta">0表示不限制</span></td></tr>
+<tr>
+	<td class="pTabColName">每天限制：</td><td class="pTabColVal"><input type="text" name="item_day_limit" value="{$editinfo['item_day_limit']}" class='pTxt1 pTxtL150'>&nbsp;<span class="pBeta">0表示按总限制</span></td></tr>
+<tr>
+	<td class="pTabColName">需要登录：</td><td class="pTabColVal"><input type="checkbox" name="item_login" value=1{if($editinfo['item_login'])} checked{/if} onclick="thisjs.setlogin(this.checked);">&nbsp;<span class="pBeta">需要授权登录后才能进入投票界面,注意：需要认证的服务号才支持此功能</span></td></tr>
+<tr{if($editinfo['item_login']!=1)} style="display:none"{/if} id="id_share_row">
+	<td class="pTabColName">分享奖票：</td><td class="pTabColVal"><input type="checkbox" name="item_share" value="1"{if($editinfo['item_share'])} checked{/if}>&nbsp;<span class="pBeta">如果设置了每天限制，则分享按天奖励，否则只奖励一次</span></td></tr>
+<tr>
+	<td class="pTabColName">重复投票：</td><td class="pTabColVal"><input type="checkbox" name="item_isrepeat" value="1"{if($editinfo['item_isrepeat'])} checked{/if}>&nbsp;<span class="pBeta">如果设置了每天限制，则按天限制是否重复</span></td></tr>
+<tr>
+	<td class="pTabColName">参与抽奖：</td><td class="pTabColVal"><input type="checkbox" name="item_award" value="1"{if($editinfo['item_award'])} checked{/if}>&nbsp;<span class="pBeta">每投一票可以参与一次抽奖，需要配置抽奖模块</span></td></tr>
+<tr>
+	<td class="pTabColName">活动介绍：</td><td class="pTabColVal"><textarea name="item_cont" rows="12" cols="80">{$editinfo['item_cont']}</textarea></td></tr>
+<tr>
+	<td class="pTabColName">底部信息：</td><td class="pTabColVal"><textarea name="item_footer" rows="3" cols="80">{$editinfo['item_footer']}</textarea></td></tr>
+<tr>
+	<td class="pTabColName">图片列表：<br>368px×300px</td><td class="pTabColVal">
+	<div class="me_div1" id="id_slide1">
+	<li style="display:none">
+	图片：<input type="text" name="slide1_url[]" id="url_THISID" value="" class='pTxt1 pTxtL300'>&nbsp;<a href="javascript:kj.dialog({id:'dialog_attatch',title:'选择图片',url:'common.php?app=other&app_act=attatch&url_objid=url_THISID',w:600,showbtnhide:false,type:'iframe'});">选择</a>&nbsp;&nbsp;[<a href="javascript:kj.remove('#THISID');">删除</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<iframe name="frm_THISID" src="common.php?app=other&app_act=upload&objid=url_THISID" width="300px" height="30px" frameborder=0 scrolling="no"></iframe></li>
+	{foreach($editinfo['pics'] as $key=>$item)}
+	<li id="id_slide_{$key}">
+	图片：<input type="text" name="slide1_url[]" id="id_slide1_{$key}" value="{$item}" class='pTxt1 pTxtL300'>&nbsp;<a href="javascript:kj.dialog({id:'dialog_attatch',title:'选择图片',url:'common.php?app=other&app_act=attatch&url_objid=id_slide1_{$key}',w:600,showbtnhide:false,type:'iframe'});">选择</a>&nbsp;&nbsp;[<a href="javascript:kj.remove('#id_slide_{$key}');">删除</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<iframe name="frm_slide1_{$key}" src="common.php?app=other&app_act=upload&objid=id_slide1_{$key}" width="300px" height="30px" frameborder=0 scrolling="no"></iframe>	
+	</li>
+	{/foreach}
+	</div>
+	<div class="me_div2"><input type="button" name="btn_slide_add" value="添加" onclick="thisjs.slide1_add();"></div>
+	</td>
+	</tr>
+</table>
+</div>
+<div class="pFootAct" id="id_pFootAct">
+	<li>
+	<input type="button" name="dosubmit" value="保存" onclick="admin.frm_ajax('save');" class="pBtn">
+	</li>
+</div>
+<script>
+var thisjs = new function() {
+	this.slide1_add = function(){
+		var arr = kj.obj("#id_slide1 li");
+		if(!arr) return;
+		if( !('length' in arr) || arr.length < 1 ) return;
+
+		var obj_div = document.createElement("li");
+		var str_id = "id" + Math.random();
+		str_id = str_id.replace(/\./g, "");
+		obj_div.id = str_id;
+		obj_div.className = arr[0].className;
+		obj_div.innerHTML = arr[0].innerHTML.replace(/THISID/g,obj_div.id);
+		kj.obj("#id_slide1").appendChild(obj_div);
+	}
+	this.setlogin = function(val) {
+		if(val) {
+			kj.show("#id_share_row");
+		} else {
+			kj.hide("#id_share_row");
+		}
+	}
+}
+function attatch_callback() {
+	kj.dialog.close("#windialog_attatch");
+}
+</script>
+{include(footer)}

@@ -1,0 +1,75 @@
+{include(header)}
+<style>
+.me_div1{float:left;width:500px}
+.me_div1 li{line-height:25px;float:left;width:500px;padding-bottom:10px;line-height:35px}
+.me_div2{float:left;clear:both}
+</style>
+<script>
+//保存时交验规则
+admin.rule['save'] =[];
+
+</script>
+<div class="pMenu" id="id_pMenu">
+	<li class="sel">基本信息</li>
+</div>
+<div class="pMain" id="id_main">
+<table class='pEditTable'>
+<tr class='pTabTitRow'><td class='pTabTitCol' colspan="2"></td></tr>
+<tr>
+	<td class="pTabColName">分&nbsp;&nbsp;组：</td><td class="pTabColVal"><select name="act_group">{foreach($arr_group as $item)}<option value="{$item['group_name']}"{if($item['group_name'] == $editinfo['act_group'])} selected{/if}>{$item['group_name']}</option>{/foreach}</select> <span style="color:#ff0000">*</span></td></tr>
+<tr>
+	<td class="pTabColName">名&nbsp;&nbsp;称：</td><td class="pTabColVal"><input type="text" name="act_name" value="{$editinfo['act_name']}" class='pTxt1 pTxtL300' ruletips="姓名不能为空" ruletipsmode=1 required> <span style="color:#ff0000">*</span></td></tr>
+<tr>
+	<td class="pTabColName">编&nbsp;&nbsp;号：</td><td class="pTabColVal"><input type="text" name="act_ext2" value="{$editinfo['act_ext2']}" class='pTxt1 pTxtL300'></td></tr>
+<tr>
+	<td class="pTabColName">介&nbsp;&nbsp;绍：</td><td class="pTabColVal"><textarea name="act_beta" rows="8" cols="50">{$editinfo['act_beta']}</textarea></td></tr>
+<tr>
+	<td class="pTabColName">图片列表：<br>368px×300px</td><td class="pTabColVal">
+	<div class="me_div1" id="id_slide1">
+	<li style="display:none">
+	图片：<input type="text" name="slide1_url[]" id="url_THISID" value="" class='pTxt1 pTxtL300'>&nbsp;<a href="javascript:kj.dialog({id:'dialog_attatch',title:'选择图片',url:'common.php?app=other&app_act=attatch&url_objid=url_THISID',w:600,showbtnhide:false,type:'iframe'});">选择</a>&nbsp;&nbsp;[<a href="javascript:kj.remove('#THISID');">删除</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<iframe name="frm_THISID" src="common.php?app=other&app_act=upload&objid=url_THISID" width="300px" height="30px" frameborder=0 scrolling="no"></iframe></li>
+	{foreach($editinfo['pics'] as $key=>$item)}
+	<li id="id_slide_{$key}">
+	图片：<input type="text" name="slide1_url[]" id="id_slide1_{$key}" value="{$item}" class='pTxt1 pTxtL300'>&nbsp;<a href="javascript:kj.dialog({id:'dialog_attatch',title:'选择图片',url:'common.php?app=other&app_act=attatch&url_objid=id_slide1_{$key}',w:600,showbtnhide:false,type:'iframe'});">选择</a>&nbsp;&nbsp;[<a href="javascript:kj.remove('#id_slide_{$key}');">删除</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<iframe name="frm_slide1_{$key}" src="common.php?app=other&app_act=upload&objid=id_slide1_{$key}" width="300px" height="30px" frameborder=0 scrolling="no"></iframe>	
+	</li>
+	{/foreach}
+	</div>
+	<div class="me_div2"><input type="button" name="btn_slide_add" value="添加" onclick="thisjs.slide1_add();"></div>
+	</td>
+	</tr>
+	<tr>
+	<td class="pTabColName">状&nbsp;&nbsp;态：</td><td class="pTabColVal"><select name="act_state">{foreach($arr_state as $item=>$key)}<option value="{$key}"{if($key == $editinfo['act_state'])} selected{/if}>{$item}</option>{/foreach}</select></td></tr>
+<tr>
+	<td class="pTabColName">排&nbsp;&nbsp;序：</td><td class="pTabColVal"><input type="text" name="act_sort" value="{$editinfo['act_sort']}" class='pTxt1 pTxtL100'></td></tr>
+<tr>
+	<td class="pTabColName">联 系 人：</td><td class="pTabColVal"><input type="text" name="act_linkname" value="{$editinfo['act_linkname']}" class='pTxt1 pTxtL150'></td></tr>
+<tr>
+	<td class="pTabColName">联系电话：</td><td class="pTabColVal"><input type="text" name="act_linktel" value="{$editinfo['act_linktel']}" class='pTxt1 pTxtL150'></td></tr>
+</table>
+</div>
+<div class="pFootAct" id="id_pFootAct">
+	<li>
+	<input type="button" name="dosubmit" value="保存" onclick="admin.frm_ajax('save');" class="pBtn">
+	</li>
+</div>
+<script>
+var thisjs = new function() {
+	this.slide1_add = function(){
+		var arr = kj.obj("#id_slide1 li");
+		if(!arr) return;
+		if( !('length' in arr) || arr.length < 1 ) return;
+
+		var obj_div = document.createElement("li");
+		var str_id = "id" + Math.random();
+		str_id = str_id.replace(/\./g, "");
+		obj_div.id = str_id;
+		obj_div.className = arr[0].className;
+		obj_div.innerHTML = arr[0].innerHTML.replace(/THISID/g,obj_div.id);
+		kj.obj("#id_slide1").appendChild(obj_div);
+	}
+}
+function attatch_callback() {
+	kj.dialog.close("#windialog_attatch");
+}
+</script>
+{include(footer)}

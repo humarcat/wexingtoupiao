@@ -1,0 +1,375 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>摇一摇抽奖-{$obj_item['item_title']}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<script>
+var obj_share = {'title':'【{$obj_item['item_title']}】-{cfg:(site_title,sys)}','desc':'快来给我投一票吧，还可以免费抽大奖，惊喜多多！'};
+</script>
+</head>
+<body class="bg1">
+<link rel="stylesheet" type="text/css" href="award/css.css?rand=<?php echo rand();?>"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js?rand=<?php echo rand();?>"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<script src="/common/js/kj.rule.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+<div class="p1" id="id_p1" style="display:none"><img src="award/p1.png"></div>
+<div class="yun1 Tv1" id="id_yun1" style="display:none"><img src="award/yun1.png"></div>
+<div class="lw Tv1" id="id_lw" style="display:none"><img src="award/lw.png" id="id_lw_img" onclick="thisjs.yao_yao();"></div>
+<div class="yun2 Tv1" id="id_yun2" style="display:none"><img src="award/yun2x.png"></div>
+<div class="p3" id="id_p3">
+	<div class="xpic"><img src="award/p3x.png"></div>
+	<div class="xa">
+	<li class="x1"><a href="?itemid={$obj_item['item_id']}">&nbsp;&nbsp;<img src="award/ico2.png"><br>&nbsp;&nbsp;返回主页</a></li><li class="x2"><a href="?app_act=award.lottery"><img src="award/ico1.png"><br>我的礼包</a></li>
+	</div>
+</div>
+<div class="lq Tv1" id="id_lq" style="display:none"><li><img src="award/lq.png" id="id_lqimg"></li><li class="x1" style="display:none"><h1><br>没有摇到哦<br>换个姿势再摇吧</h1></li></div>
+<input type="button" name="btnlq" id="id_btn_lq" value="领 取" class="btn1 Tv1" style="display:none" onclick="thisjs.lqcg();">
+<div class="tips1 Tv1" id="id_tips1" style="display:none">您有<font id="id_yao_num">{$num}</font>次摇奖机会</div>
+<input type="button" name="btnlq" id="id_btn_share" value="分享到朋友圈可获得一次摇奖机会" class="btn1 Tv1" style="display:none" onclick="thisjs.share();">
+<input type="button" name="btnlq" id="id_btn_agin" value="再摇一次" class="btn1 Tv1" style="display:none" onclick="thisjs.yao_agin()" id="id_again_1">
+<div id="id_lqcg" class="lqcg" style="display:none"><img src="award/lqcg.png" id="id_lqcg_img"><li class='x1'><a href="?app_act=voucher">查看礼包</a><a href="javascript:thisjs.yao_agin();" id="id_again_2">再摇一次</a></li><li class="y1" id="id_lqcg_txt">领取成功</li></div>
+<div id="id_address" class="address" style="display:none">
+	<div class="x2">
+		<li class="y1">"请填写您的收货信息，我们将在5个工作日之内，以快递的方式将奖品寄送给您"</li>
+		<li class="y2"><font>姓名</font><input type="text" name="name" value="" id="id_info_name"></li>
+		<li class="y2"><font>电话</font><input type="text" name="tel" value="" id="id_info_tel"></li>
+		<li class="y2"><font>地址</font><input type="text" name="address" value="" id="id_info_address"></li>
+	</div>
+	<div class="x1"><img src="award/bg1.png" onclick="thisjs.address_save();"></div>
+</div>
+<audio id="id_wav">
+<source src="/webcss/default/award/kaka.wav" type="audio/mpeg">
+</audio>
+<img src="award/wxshare.png" class="sharepic" style="display:none" id="id_sharepic">
+<script>
+var thisjs = new function() {
+	this.yao_state = 0;
+	this.voucher_type = 0;
+	this.objlw = {};
+	this.load = function() {
+		var h = kj.h();
+		var hp3 = kj.h("#id_p3");
+		var hyun2 = kj.h("#id_yun2");
+		var top1 = h/20*11;
+		kj.set("#id_yun2","style.top",top1+'px');
+		var top2 = top1 - h/20;
+		kj.set("#id_yun1","style.top",top2+'px');
+		var top3 = top1 + hyun2 - kj.h("#id_lw")-kj.h("#id_lw")/10;
+		kj.set("#id_lw","style.top",top3+'px');
+		var left = kj.w()/5;
+		kj.set("#id_lw","style.left",left+'px');
+		kj.show("#id_p1");
+		//kj.set("#id_p1 img","style.height",top3+"px");
+		var top4 = top1+kj.h("#id_yun2");
+		var offset = kj.offset("#id_p3");
+		kj.show("#id_tips1");
+		top4 = top4+(offset.top-top4)/2-kj.h("#id_tips1")/2;
+		kj.set("#id_tips1","style.top",top4+'px');
+		left = kj.w()/2-kj.w("#id_tips1")/2;
+		kj.set("#id_tips1","style.left" , left+'px');
+		return;
+		top4 = offset.top+offset.height/3;
+		kj.set("#id_a_voucher","style.top",top4+"px");
+		kj.set("#id_a_voucher","style.left",kj.w()/5+"px");
+		kj.set("#id_a_voucher","style.width",kj.w()/5+"px");
+		kj.set("#id_a_voucher","style.height",kj.w()/5+"px");
+
+		kj.set("#id_a_send","style.top",top4+"px");
+		kj.set("#id_a_send","style.left",kj.w()/1.7+"px");
+		kj.set("#id_a_send","style.width",kj.w()/4+"px");
+		kj.set("#id_a_send","style.height",kj.w()/5+"px");
+	}
+	this.lq = function() {
+		kj.hide("#id_lw");
+		kj.show("#id_lq");
+		var offset = kj.offset("#id_yun2");
+		var top = offset.top+offset.height-kj.h("#id_lq")-kj.h("#id_lq")/10;
+		kj.set("#id_lq","style.top",top+'px');
+		var h1 = kj.h("#id_lqimg");
+		kj.set("#id_lq .x1" , "style.marginTop" , (-1*h1)+"px");
+		kj.show("#id_lq .x1");
+		kj.show("#id_btn_lq");
+		kj.show("#id_btn_share");
+		kj.show("#id_btn_agin");
+		var topx = offset.top+offset.height - kj.h("#id_btn_lq")*2;
+		kj.set("#id_btn_lq","style.top" , topx+'px');
+		kj.set("#id_btn_share","style.top" , topx+'px');
+		kj.set("#id_btn_agin","style.top" , topx+'px');
+		var left = kj.w()/2-kj.w("#id_btn_lq")/2;
+		kj.set("#id_btn_lq","style.left" , left+'px');
+		left = kj.w()/2-kj.w("#id_btn_share")/2;
+		kj.set("#id_btn_share","style.left" , left+'px');
+		left = kj.w()/2-kj.w("#id_btn_agin")/2;
+		kj.set("#id_btn_agin","style.left" , left+'px');
+		kj.hide("#id_btn_lq");
+		kj.hide("#id_btn_share");
+		kj.hide("#id_btn_agin");
+		kj.hide("#id_address");
+	}
+	this.yao_yao = function() {
+		this.yao_state = 1;
+		var w = kj.w("#id_lw");
+		var h = kj.h("#id_lw");
+		this.objlw.w = w;
+		this.objlw.h = h;
+		w = w+w*0.1;
+		this.objlw.tow = w;
+		var offset = kj.offset("#id_lw");
+		this.objlw.top = offset.top;
+		this.yao_1();
+	}
+	this.yao_1 = function() {
+		var w = kj.w("#id_lw");
+		if(w>=this.objlw.tow) {
+			kj.addClassName("#id_lw img","xact");
+			setTimeout("thisjs.yao_2();",400);
+		} else {
+			w = w+2;
+			kj.set("#id_lw","style.width",w+"px");
+			var h = kj.h("#id_lw");
+			var offset = kj.offset("#id_lw");
+			var top = this.objlw.top-(h-this.objlw.h)/2;
+			kj.set("#id_lw","style.top",top+"px");
+			setTimeout("thisjs.yao_1();",5);
+		}
+	}
+	this.yao_2 = function() {
+		var w = kj.w("#id_lw");
+		if(w<=this.objlw.w) {
+			kj.set("#id_lw","style.width",this.objlw.w+"px");
+			kj.set("#id_lw","style.top",this.objlw.top+"px");
+			thisjs.yao_go();
+		} else {
+			w = w-2;
+			kj.set("#id_lw","style.width",w+"px");
+			var h = kj.h("#id_lw");
+			var offset = kj.offset("#id_lw");
+			var top = this.objlw.top-(h-this.objlw.h)/2;
+			kj.set("#id_lw","style.top",top+"px");
+			setTimeout("thisjs.yao_2();",5);
+		}
+	}
+	this.imgload = function() {
+		var w = kj.w("#id_lw");
+		var h = kj.h("#id_lw");
+		this.objlw.w = w;
+		this.objlw.h = h;
+		w = w-w*0.5;
+		var offset = kj.offset("#id_lw");
+		this.objlw.top = offset.top;
+		this.objlw.left = offset.left;
+		kj.set("#id_lw","style.width",w+"px");
+		var left = (this.objlw.left+this.objlw.w/2)-w/2;
+		kj.set("#id_lw","style.left",left+"px");
+		this.imgload2();
+	}
+	this.imgload2 = function() {
+		var w = kj.w("#id_lw");
+		if(w>=this.objlw.w) {
+			kj.set("#id_lw","style.width",this.objlw.w+"px");
+			kj.set("#id_lw","style.top",this.objlw.top+"px");
+			kj.set("#id_lw","style.left",this.objlw.left+"px");
+		} else {
+			w = w+10;
+			kj.set("#id_lw","style.width",w+"px");
+			var h = kj.h("#id_lw");
+			var offset = kj.offset("#id_lw");
+			var top = this.objlw.top-(h-this.objlw.h)/2;
+			kj.set("#id_lw","style.top",top+"px");
+			var left = (this.objlw.left+this.objlw.w/2)-w/2;
+			kj.set("#id_lw","style.left",left+"px");
+			setTimeout("thisjs.imgload2();",60);
+		}
+	}
+
+	this.yao_go = function() {
+		kj.ajax.get("?app_act=yao",function(data) {
+			thisjs.lq();
+			kj.delClassName("#id_lw img","xact");
+			var obj = kj.json(data);
+			if(obj.isnull) {
+				kj.set("#id_lq .x1","innerHTML" , '<h1><br>没有摇到哦<br>换个姿势再摇吧</h1>');
+				kj.show("#id_btn_agin");
+				return;
+			}
+			obj.num = kj.toint(obj.num);
+			kj.set("#id_yao_num","innerHTML",obj.num);
+			obj.id = kj.toint(obj.id);
+			if(obj.id>0) {
+				kj.set("#id_lq .x1","innerHTML" , '<h1><br>'+obj.name+'</h1>');
+				kj.show("#id_btn_lq");
+			} else if(obj.num>0) {
+				kj.set("#id_lq .x1","innerHTML" , '<h1><br>没有摇到哦<br>换个姿势再摇吧</h1>');
+				kj.show("#id_btn_agin");
+			} else if(obj.noshare == '1') {
+				kj.set("#id_lq .x1","innerHTML" , '<h1><br>没有摇到哦<br>换个姿势再摇吧</h1>');
+				kj.show("#id_btn_agin");
+				//kj.show("#id_btn_share");
+			} else {
+				kj.set("#id_lq .x1","innerHTML" , '<h1><br>没有摇到哦<br>换个姿势再摇吧</h1>');
+				kj.show("#id_btn_agin");
+				//kj.hide("#id_btn_share");
+			}
+			thisjs.voucher_type = kj.toint(obj.type);
+			thisjs.voucher = obj;
+		});
+	}
+	this.yao_agin =function() {
+		kj.hide("#id_btn_agin");
+		kj.hide("#id_lqcg");
+		kj.show("#id_yun2");
+		kj.show("#id_yun1");
+		if(thisjs.voucher.num<1) {
+			kj.show("#id_lq");
+			kj.hide("#id_tips1");
+			kj.set("#id_lq .x1","innerHTML" , '<h1><br>摇奖机会已用完<br>可以参加投票获取机会</h1>');
+			if(thisjs.voucher.noshare=='1') {
+				kj.show("#id_btn_share");
+			} else {
+				kj.hide("#id_btn_share");
+			}
+			return;
+		}
+		kj.hide("#id_lq");
+		kj.show("#id_lw");
+		kj.show("#id_tips1");
+		this.yao_state = 0;
+	}
+	this.lqcg = function() {
+		kj.hide(".Tv1");
+		if(this.voucher_type==0) {
+			kj.show("#id_address");
+			var offset = kj.offset("#id_p1");
+			var top = offset.top+offset.height;
+			kj.set("#id_address","style.top",top+'px');
+			left = kj.w()/2-kj.w("#id_address")/2;
+			kj.set("#id_address","style.left" , left+'px');
+		} else {
+			this.show_lqcg("领取成功");
+		}
+	}
+	this.show_lqcg = function(txt) {
+		kj.show("#id_lqcg");
+		var offset = kj.offset("#id_p1");
+		var top = offset.top+offset.height;
+		kj.set("#id_lqcg","style.top",top+'px');
+		left = kj.w()/2-kj.w("#id_lqcg")/2;
+		kj.set("#id_lqcg","style.left" , left+'px');
+		kj.set("#id_lqcg_txt","innerHTML",txt);
+		var h1 = kj.h("#id_lqcg_img");
+		var h2 = kj.h("#id_lqcg_txt");
+		var h = -1*h1/2-h2/2;
+		kj.set("#id_lqcg_txt" , "style.marginTop",h+'px');
+		kj.set("#id_lqcg_txt","style.width",kj.w("#id_lqcg_img")+'px');
+	}
+	this.address_save = function() {
+		if(kj.obj("#id_info_name").value=='') {
+			alert("请填写收货人姓名");
+			kj.obj("#id_info_name").focus();
+			return;
+		}
+		if(kj.obj("#id_info_tel").value=='') {
+			alert("请填写收货人电话");
+			kj.obj("#id_info_tel").focus();			
+			return;
+		}
+		if(kj.obj("#id_info_address").value=='') {
+			alert("请填写收货人地址");
+			kj.obj("#id_info_address").focus();						
+			return;
+		}
+		kj.obj("#id_again_2").href = "{fun_get::url()}";
+		kj.handler(kj.obj("#id_again_1"),'click',function(){
+			location.reload(true);
+		});
+		var objdata = {};
+		objdata.name = kj.obj("#id_info_name").value;
+		objdata.tel = kj.obj("#id_info_tel").value;
+		objdata.address = kj.obj("#id_info_address").value;
+		objdata.id = this.voucher.lotteryid;
+		kj.ajax.post("?app_act=award.lottery.save",objdata,function(data) {
+			var objdata = kj.json(data);
+			if(objdata.isnull) {
+				alert("系统繁忙");
+				return;
+			}
+			if(objdata.code == '0') {
+				kj.hide("#id_address");
+				thisjs.show_lqcg("提交成功");
+			} else {
+				alert(objdata.msg);
+			}
+		});
+	}
+	this.share = function() {
+		if(!kj.obj("#id_bglayer")) kj.bglayer("id_sharepic","#000",0.6,'{"click":"hide"}');
+		kj.set("#id_bglayer","style.zIndex",11);
+		kj.show('#id_sharepic');
+	}
+}
+kj.onload(function() {
+	kj.show("#id_yun1");
+	kj.show("#id_yun2");
+	kj.show("#id_lw");
+	thisjs.load();
+	setTimeout("thisjs.imgload();",200);
+	{if($num<=0)}
+		thisjs.lq();
+		kj.set("#id_lq .x1","innerHTML" , '<h1><br>快去参加投票<br>获取抽奖机会吧</h1>');
+		kj.hide("#id_tips1");
+	{/if}
+	{if(fun_get::agent()!='iphone' && fun_get::agent()!='ipad' && $num>0)}
+	document.addEventListener("WeixinJSBridgeReady", function () {
+		kj.obj("#id_wav").volume = 0;
+		kj.obj("#id_wav").play();
+	}, false);
+	{/if}
+});
+kj.onresize(function() {
+	if(thisjs.yao_state != 0) return;
+	thisjs.load();
+});
+{if($num>0)}
+	var shake=2000,   
+	   last_update=0,   
+	   count=0,  
+	   x=y=z=last_x=last_y=last_z=0;  
+	if(window.DeviceMotionEvent){  
+		window.addEventListener("devicemotion",deviceMotionHandler,false);  
+	}else{  
+		 alert("本设备不支持devicemotion事件");  
+	}
+	console.log(new Date().valueOf());  
+	function deviceMotionHandler(eventData){  
+		var acceleration = eventData.accelerationIncludingGravity,  
+			currTime=new Date().valueOf(),  
+			diffTime=currTime-last_update;  
+			if(diffTime>100){
+			   last_update=currTime;  
+			   x=acceleration.x;  
+			   y=acceleration.y;  
+			   z=acceleration.z;  
+			   var speed=Math.abs(x+y+z-last_x-last_y-last_z)/diffTime*10000;
+			   if(speed>shake && thisjs.yao_state==0){
+				   kj.obj("#id_wav").currentTime=0;
+				   kj.obj("#id_wav").volume = 1;
+				   kj.obj("#id_wav").play();
+					count++; 
+					thisjs.yao_yao();
+			   }
+			   last_x = x;  
+			   last_y = y;  
+			   last_z = z;  
+			}  
+	}  
+{/if}
+</script>
+{include(label.share)}
+</body>
+</html>

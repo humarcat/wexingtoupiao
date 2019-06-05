@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{$obj_item['item_title']}-{cfg:(site_title,sys)}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="img/css.css?rnd=<?php echo rand();?>"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+</head>
+<body>
+<input type="hidden" name="s_group" id="id_s_group" value="">
+<input type="hidden" name="s_ping" id="id_s_ping" value="">
+<a href="?app_act=intro&itemid={$obj_item['item_id']}" style="position:absolute;top:20px;right:20px;width:auto"><img src="img/hdgz.png" style="width:50px;"></a>
+<div class="top"><img src="img/top.jpg?rnd=kdk"></div>
+<div class="main" id="id_bg2">
+	<div class="div1">
+		<span class="x1">
+			<div class="dropdown"><label onclick="thisjs.xiala('#id_xiala_1',this);"><font id="id_group_name">全部类别</font><i></i></label><div class="xiala" id="id_xiala_1" style='display:none'><a href="javascript:thisjs.xialaset('#id_xiala_1','','全部');">全部</a>
+			{foreach($arr_group as $item=>$key)}<a href="javascript:thisjs.xialaset('#id_xiala_1','{$key}','{$key}');">{$key}</a>{/foreach}</div></div>
+			<div class="dropdown"><label onclick="thisjs.xiala('#id_xiala_2',this);"><font id="id_ping_name">姓名首字母</font><i></i></label><div class="xiala" id="id_xiala_2" style='display:none'><a href="javascript:thisjs.xialaset('#id_xiala_2','','全部');">全部</a><a href="javascript:thisjs.xialaset('#id_xiala_2','A-G');">A-G</a><a href="javascript:thisjs.xialaset('#id_xiala_2','H-N');">H-N</a><a href="javascript:thisjs.xialaset('#id_xiala_2','O-U');">O-U</a><a href="javascript:thisjs.xialaset('#id_xiala_2','V-Z');">V-Z</a></div></div>
+		</span>
+		<span class="x2"><input type="text" name="s_key" value="" id="id_s_key" placeholder="输入姓名搜索"><input type="button" name="btnok" value="" onclick="thisjs.shoppage = 0;thisjs.shopmore();"></span>
+	</div>
+	<div class="list" id="id_page_list">
+	{foreach($arr_list['list'] as $item)}
+		<li>
+			<a href="?app_act=detail&id={$item['act_id']}" class="x1"><img src = "{$item['act_pic']}"></a>
+			<span><font>{$item['act_vote']}</font>票&nbsp;&nbsp;&nbsp;&nbsp;第{$item['pm']}名</span>
+			<span><font><b>{$item['act_name']}</b></font>{if(!empty($item['act_ext2']))}（{$item['act_ext2']}号）{/if}</span>
+			<span><a href="?app_act=detail&id={$item['act_id']}" class="xbtn">投 票</a></span>
+		</li>
+	{/foreach}
+	</div>
+</div>
+<div class="init" id="id_init_refresh" style="display:none">
+	<li><img src="img/init.gif"><font>正在加载...</font></li>
+</div>
+<div class="init" style="margin-top:30px" style="display:none" id="id_loaded">
+	<li style="color:#888;width:120px">全部作品已加载完</li>
+</div>
+<div class="bottom"><span><font style="display:">主办：微商互联&nbsp;&nbsp;协办：快捷cms</font></span></div>
+{include(label.footer)}
+<script>
+var thisjs = new function() {
+	this.shoppages = kj.toint("{$arr_list['pageinfo']['pages']}");
+	this.shoppage = 1;
+	this.xiala = function(id,o) {
+		if(kj.obj(id).style.display=='') {
+			kj.hide(id);return;
+		}
+		var offset = kj.offset(o);
+		var top = offset.top+offset.height+2;
+		kj.set(id,'style.top',top+'px');
+		kj.set(id,'style.left',offset.left+'px');
+		kj.show(id);
+		kj.data['clicker'] = id;
+	}
+	this.xialaset = function(id , val , val2) {
+		if(id == '#id_xiala_1') {
+			kj.obj("#id_group_name").innerHTML = val2;
+			kj.obj("#id_s_group").value=val;
+		} else {
+			if(!val2) val2 = val;
+			kj.obj("#id_ping_name").innerHTML = val2;
+			kj.obj("#id_s_ping").value=val;
+		}
+		kj.hide(id);
+		thisjs.shoppage = 0;
+		thisjs.shopmore();
+	}
+	this.onscroll = function(){
+		var scrollTop = 0, bodyScrollTop = 0, documentScrollTop = 0;
+		if(document.body){
+			bodyScrollTop = document.body.scrollTop;
+		}
+		if(document.documentElement){
+			documentScrollTop = document.documentElement.scrollTop;
+		}
+		scrollTop = (bodyScrollTop - documentScrollTop > 0) ? bodyScrollTop : documentScrollTop;
+
+		var scrollHeight = 0, bodyScrollHeight = 0, documentScrollHeight = 0;
+		if(document.body){
+			bodyScrollHeight = document.body.scrollHeight;
+		}
+		if(document.documentElement){
+			documentScrollHeight = document.documentElement.scrollHeight;
+		}
+		scrollHeight = (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight;
+		var windowHeight = 0;
+	　　if(document.compatMode == "CSS1Compat"){
+			windowHeight = document.documentElement.clientHeight;
+	　　}else{
+			windowHeight = document.body.clientHeight;
+	　　}
+		var a= scrollTop + windowHeight;
+		b = scrollHeight-100;
+		if(scrollTop + windowHeight >= scrollHeight-100){
+			this.shopmore();
+	　　}
+	}
+	this.shopmore = function() {
+		if(this.shoppage>=this.shoppages && this.shoppages!=0) return;
+		if(this.ispagein) return;
+		if(thisjs.shoppage==0) kj.set("#id_page_list","innerHTML","");
+		this.shoppage++;
+		this.ispagein = true;
+		if(this.shoppage==this.shoppages) kj.hide("#id_listmore");
+		var url = "?app_act=list.more&page="+this.shoppage;
+		url +="&s_group="+kj.obj("#id_s_group").value;
+		url +="&s_ping="+kj.obj("#id_s_ping").value;
+		url +="&s_key="+kj.obj("#id_s_key").value;
+		kj.ajax.get(url, function(data){
+			thisjs.ispagein = false;
+			var obj = kj.json(data);
+			var obj_li;
+			for(var i = 0 ; i < obj.list.length ; i++) {
+				html = '';
+				html += '<a href="?app_act=detail&id='+obj.list[i].act_id+'" class="x1"><img src = "'+obj.list[i].act_pic+'"></a>';
+				html += '<span><font>'+obj.list[i].act_vote+'</font>票&nbsp;&nbsp;&nbsp;&nbsp;第'+obj.list[i].pm+'名</span>';
+				html += '<span><font><b>'+obj.list[i].act_name+'</b></font>';
+				
+				if(obj.list[i].act_ext2 != '') html +='（'+obj.list[i].act_ext1+'岁）';
+				html += '</span>';
+				html += '<span><a href="?app_act=detail&id='+obj.list[i].act_id+'" class="xbtn">投 票</a></span>';
+				obj_li=document.createElement("li");
+				obj_li.innerHTML = html;
+				kj.obj("#id_page_list").appendChild(obj_li);
+			}
+			thisjs.shoppages = kj.toint(obj.pageinfo.pages);
+			thisjs.shoppage = kj.toint(obj.pageinfo.page);
+			if(thisjs.shoppage >= thisjs.shoppages ) {
+				kj.hide("#id_init_refresh");
+				kj.show("#id_loaded");
+			} else {
+				kj.show("#id_init_refresh");
+				kj.hide("#id_loaded");
+			}
+		});
+	}
+
+}
+if(thisjs.shoppage >= thisjs.shoppages ) {
+	kj.hide("#id_init_refresh");
+	kj.show("#id_loaded");
+} else {
+	kj.show("#id_init_refresh");
+	kj.hide("#id_loaded");
+}
+
+window.onscroll = function(){ 
+	thisjs.onscroll();
+}
+kj.handler(document.documentElement,"touchend",function(e){
+	//隐藏购物车
+	var target = kj.event_target(e);
+	if( !('clicker' in kj.data) || !kj.data['clicker'] ) return;
+	if(target.className.indexOf('Tmousedown')>=0) return;
+	var obj = kj.parent(target , ".dropdown");
+	if(obj) {
+		if('length' in kj.data['clicker']) {
+			var obj2;
+			for(var i  = 0  ; i < kj.data['clicker'].length ; i++) {
+				obj2 = kj.parent(kj.data['clicker'][i] , ".dropdown");
+				if(obj2 == obj) return;
+			}
+		} else if(kj.parent(kj.data['clicker'], ".dropdown") == obj || kj.data['clicker'] == obj) {
+			return;
+		}
+	}
+	kj.hide(kj.data['clicker']);
+	kj.data['clicker'] = null;
+});
+kj.handler(document.documentElement,"mousedown",function(e){
+	//隐藏购物车
+	var target = kj.event_target(e);
+	if( !('clicker' in kj.data) || !kj.data['clicker'] ) return;
+	if(target.className.indexOf('Tmousedown')>=0) return;
+	var obj = kj.parent(target , ".dropdown");
+	if(obj) {
+		if(kj.parent(kj.data['clicker'], ".dropdown") == obj || kj.data['clicker'] == obj) return;
+	}
+	kj.hide(kj.data['clicker']);
+	kj.data['clicker'] = null;
+});
+
+</script>
+</body>
+</html>

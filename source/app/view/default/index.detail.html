@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="img/css.css?rnd=<?php echo rand();?>"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+<script>
+var obj_share = {'title':'【{$obj_item['item_title']}】-{cfg:(site_title,sys)}','desc':'我在参加{$obj_item['item_title']}，快来给我投一票吧！','pic':'{fun_get::html_url($detail['act_pic'],1)}'};
+</script>
+</head>
+<body>
+<div class="detailpic" id="id_piclist">
+	<img src = "{$detail['act_pic']}" onclick="thisjs.showpic_wx('{$detail['act_pic']}');">
+</div>
+<div class="dtitle"><font>{$detail['act_name']}</font> ({$detail['act_ext2']}号)</div>
+<div class="detail">
+	<div class="xinfo"><span>已获得<font id="id_vote">{$detail['act_vote']}</font><font>票</font></span><span>当前<font>第{$detail['pm']}名</font></span></div>
+	<div class='xbtn'><span><input type="button" name="btntoupiao" value="投 票" onclick="thisjs.vote();" class='btn1' id="id_btntoupiao"></span><span><input type="button" name="btnlapiao" value="拉 票" onclick="thisjs.share();" class='btn2'></span></div>
+	<div class="xtit">介绍</div>
+	<div class="xcont">{$detail['act_beta']}</div>
+</div>
+<img src="img/wxshare.png" class="sharepic" style="display:none" id="id_sharepic">
+<div class="tips" id="id_tips" style="display:none">
+	<div class="xtit"><font id="id_tips_tit"></font><img src="img/close.png" onclick="kj.remove('#id_bglayer');kj.hide('#id_tips');"></div>
+	<div class="xcont" id="id_tips_cont">
+	</div>
+	<div class='xbtn' id="id_award_btn" style="display:none"><a href = "?app_act=award">摇一摇抽奖</a></div>
+	<div class='xfooter'></div>
+</div>
+{include(label.footer)}
+<script>
+var thisjs = new function() {
+	this.isvote = 0;
+	this.votenum = kj.toint('{$detail['act_vote']}');
+	this.share = function() {
+		if(!kj.obj("#id_bglayer")) kj.bglayer("id_sharepic","#000",0.6,'{"click":"hide"}');
+		kj.show('#id_sharepic');
+	}
+	this.show_tips = function(code , msg) {
+		if(code) {
+			kj.set("#id_tips_tit","innerHTML" , "投票成功");
+		} else {
+			kj.set("#id_tips_tit","innerHTML" , "投票失败");
+		}
+		kj.obj("#id_tips_cont").innerHTML = msg;
+		{if($obj_item['item_award'])}
+			if(code) {
+				kj.obj("#id_tips_cont").innerHTML = "恭喜您获得一次抽奖机会，快去摇一摇吧.";
+				kj.show("#id_award_btn");
+			} else {
+				kj.hide("#id_award_btn");
+			}
+		{/if}
+		if(!kj.obj("#id_bglayer")) kj.bglayer("id_tips","#000",0.6,'{"click":"hide"}');
+		kj.show('#id_tips');
+		var h = document.body.clientHeight || document.documentElement.clientHeight;
+		var top = (h-kj.h("#id_tips"))/2;
+		var top2 = document.documentElement.scrollTop || document.body.scrollTop;
+		top = top + top2;
+		kj.set("#id_tips","style.top",top+'px');
+		var left = kj.w()/2-kj.w("#id_tips")/2;
+		kj.set("#id_tips","style.left",left+'px');
+	}
+	this.vote = function() {
+		if(this.isvote) return;
+		this.isvote = 1;
+		kj.obj("#id_btntoupiao").value="投票中..";
+		kj.ajax.get("?app_act=vote&id={$detail['act_id']}&itemid={$detail['act_item_id']}",function(data) {
+			var obj = kj.json(data);
+			thisjs.isvote=0;
+			kj.obj("#id_btntoupiao").value="投 票";
+			if(!obj || obj.isnull ) {
+				thisjs.show_tips(0,"系统繁忙，请稍后再试");
+				return;
+			}
+			if(obj.code == '0') {
+				var vote = kj.toint(kj.toint("#id_vote").innerHTML);
+				vote++;
+				kj.obj("#id_vote").innerHTML = vote;
+				thisjs.show_tips(1,"投票成功，谢谢您的支持");
+				return;
+				//thisjs.votenum = thisjs.votenum+1;
+				//kj.set("#id_vote","innerHTML",thisjs.votenum+'票');
+			} else {
+				thisjs.show_tips(0,obj.msg);
+			}
+		});
+	}
+	this.showpic_wx = function(pic) {
+		var arr = kj.obj("#id_piclist img");
+		var piclist = [];
+		for(var i = 0 ; i < arr.length ; i++) {
+			if(pic=='') {pic = arr[i].src;continue;}
+			if(piclist.indexOf(arr[i].src)>=0) continue;
+			piclist[piclist.length] = arr[i].src;
+		}
+		if(pic=='') return;
+		wx.previewImage({
+			current: pic, // 当前显示的图片链接
+			urls: piclist // 需要预览的图片链接列表
+		});	
+	}
+}
+</script>
+<script src="/common/js/kj.slider.js?rnd=Math.random()"></script>
+</body>
+</html>

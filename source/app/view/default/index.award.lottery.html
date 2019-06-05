@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>摇一摇抽奖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+</head>
+<body class="bg1">
+<link rel="stylesheet" type="text/css" href="award/css.css?rand=<?php echo rand();?>"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js?rand=<?php echo rand();?>"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<script src="/common/js/kj.rule.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+<div class="top">
+	<h1>我的礼包</h1>
+	<img src="award/back.png" style="width:15px;margin-top:-28px;cursor:pointer" onclick="window.open('?app_act=award','_self');">
+</div>
+<div class="tips2" id="id_tips_usebeta" style="display:none">
+	<div class="xtit"><font>顺丰国际优惠券使用规则</font><img src="img/close.png" onclick="kj.remove('#id_bglayer');kj.hide('#id_tips_usebeta');"></div>
+	<div class="xcont" id="id_cont">
+	</div>
+	<div class='xfooter'></div>
+</div>
+<div class="tips2" id="id_tips_info" style="display:none">
+	<div class="xtit"><font>发货信息</font><img src="img/close.png" onclick="kj.remove('#id_bglayer');kj.hide('#id_tips_info');"></div>
+	<div class="xinfo">
+		<li><label>发货单号：</label><font class="Tsendid" id="id_sendid"></font></li>
+		<li><label>配送公司：</label><font class="Tsendname" id="id_sendname"></font></li>
+		<li><label>发货时间：</label><font class="Tsendtime" id="id_sendtime"></font></li>
+	</div>
+	<div class='xfooter'></div>
+</div>
+
+<div class="qlist">
+{foreach($arr_list['list'] as $item)}
+		<div>
+			<li class="xtit xt2"><h2>{$item['award_name']}</h2><font>{if($item['lottery_sendtime']>0)}已发货{else}待发货{/if}</font></li>
+			<li class="x3"{if($item['lottery_sendtime']>0)} onclick="thisjs.show_sendinfo({'sendid':'{$item['lottery_sendid']}','sendname':'{$item['lottery_sendname']}','sendtime':'{$item['lottery_sendtime']}'});"{else} onclick="thisjs.show_address({'id':{$item['lottery_id']},'name':'{$item['lottery_name']}','tel':'{$item['lottery_tel']}','address':'{$item['lottery_address']}'});"{/if}>
+			<span class="y1">收货人：{$item['lottery_name']}<br>电&nbsp;&nbsp;&nbsp;话：{$item['lottery_tel']}<br>地&nbsp;&nbsp;&nbsp;址：{$item['lottery_address']}</span>
+			</li>
+		</div>
+{/foreach}
+</div>
+<div id="id_address" class="address" style="display:none">
+	<div class="x2">
+		<img src="img/close.png" onclick="kj.remove('#id_bglayer');kj.hide('#id_address');" class="ximg">
+		<li class="y1">"请填写您的收货信息，我们将在5个工作日之内，以快递的方式将奖品寄送给您"</li>
+		<li class="y2"><font>姓名</font><input type="text" name="name" value="" id="id_info_name"></li>
+		<li class="y2"><font>电话</font><input type="text" name="tel" value="" id="id_info_tel"></li>
+		<li class="y2"><font>地址</font><input type="text" name="address" value="" id="id_info_address"></li>
+	</div>
+	<div class="x1"><img src="award/bg1.png" onclick="thisjs.address_save();"></div>
+</div>
+
+<script>
+var thisjs = new function() {
+	this.show_address = function(obj) {
+		if(!kj.obj("#id_bglayer")) kj.bglayer("id_address","#000",0.6,'{"click":"hide"}');
+		kj.show("#id_address");
+		var offset = kj.offset("#id_address");
+		var top = kj.h()/2-offset.height-offset.height/2;
+		kj.set("#id_address","style.top",top+'px');
+		left = kj.w()/2-kj.w("#id_address")/2;
+		kj.set("#id_address","style.left" , left+'px');
+		kj.obj("#id_info_name").value = obj.name;
+		kj.obj("#id_info_tel").value = obj.tel;
+		kj.obj("#id_info_address").value = obj.address;
+		this.lottery_id = obj.id;
+	}
+	this.show_sendinfo = function(obj) {
+		if(!kj.obj("#id_bglayer")) kj.bglayer("id_tips_info","#000",0.6,'{"click":"hide"}');
+		kj.show("#id_tips_info");
+		var offset = kj.offset("#id_tips_info");
+		var top = kj.h()/2-offset.height-offset.height/2;
+		var t = document.body.scrollTop || document.documentElement.scrollTop;
+		top = top + kj.toint(t);
+		kj.set("#id_tips_info","style.top",top+'px');
+		left = kj.w()/2-kj.w("#id_tips_info")/2;
+		kj.set("#id_tips_info","style.left" , left+'px');
+		kj.obj("#id_sendid").innerHTML = obj.sendid;
+		kj.obj("#id_sendname").innerHTML = obj.sendname;
+		kj.obj("#id_sendtime").innerHTML = obj.sendtime;
+	}
+	this.address_save = function() {
+		if(kj.obj("#id_info_name").value=='') {
+			alert("请填写收货人姓名");
+			kj.obj("#id_info_name").focus();
+			return;
+		}
+		if(kj.obj("#id_info_tel").value=='') {
+			alert("请填写收货人电话");
+			kj.obj("#id_info_tel").focus();			
+			return;
+		}
+		if(kj.obj("#id_info_address").value=='') {
+			alert("请填写收货人地址");
+			kj.obj("#id_info_address").focus();						
+			return;
+		}
+		var objdata = {};
+		objdata.name = kj.obj("#id_info_name").value;
+		objdata.tel = kj.obj("#id_info_tel").value;
+		objdata.address = kj.obj("#id_info_address").value;
+		objdata.id = this.lottery_id;
+		kj.ajax.post("?app_act=award.lottery.save",objdata,function(data) {
+			var objdata = kj.json(data);
+			if(objdata.isnull) {
+				alert("系统繁忙");
+				return;
+			}
+			if(objdata.code == '0') {
+				kj.hide("#id_address");
+				kj.remove('#id_bglayer');
+				kj.alert.show("提交成功",function(){
+					location.reload(true);
+				});
+			} else {
+				alert(objdata.msg);
+			}
+		});
+	}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}-活动规则</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="img/css.css?rnd=<?php echo rand();?>"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+<script>
+var obj_share = {'title':'{cfg:(site_title,sys)}','desc':'{cfg:(description,sys)}','pic':'{fun_get::html_url('/webcss/vote/img/top.jpg',1)}','link':'<?php echo fun_get::html_url("/vote.php?inviteid=".cls_obj::get("cls_user")->uid,1);?>'};
+</script>
+</head>
+<body>
+<div class="main">
+<div class="title">{$article['article_title']}</div>
+<div class="cont">{$article['article_content']}</div>
+</div>
+{include(label.footer)}
+</body>
+</html>

@@ -1,0 +1,103 @@
+{include(header)}
+<div class="pMenu" id="id_pMenu">
+	<li style="font-weight:bold"><input type="hidden" name="url_item_id" value="{$admin_item['id']}" id="id_url_item_id"><span class="more1" onmouseover="kj.windiv({'id':'item_user_windiv','fid':this,'src':'common.php?app=vote&app_act=item'});" id="id_shop_user">活动：{if($admin_item['id']<1)}请选择{else}{$admin_item['name']}{/if}</span></li>
+	<li class="sel">管理</li>
+	<li onclick="admin.menu_display(0);" class = "x_btn">查找</li>
+	<li class="fdpic" onclick="master_open({url:'common.php?app=config&app_module=user&dir={$app_dir}&filename=vote&key=vote.award.record',title:'设置字段',w:400});">&nbsp;</li>
+</div>
+<div class="btnMenuDiv" id="id_btnMenuDiv"{if($arr_list['issearch']==0)} style="display:none"{/if}>
+<li>领取时间：<input type="text" id="s_time1" name="s_time1" value="{fun_get::get('s_time1')}" class='pTxtDate' onfocus="new Calendar().show(this);"> 到 <input type="text" name="s_time2" id="s_time2" value="{fun_get::get('s_time2')}" class='pTxtDate' onfocus="new Calendar().show(this);">　抽奖时间：<input type="text" name="s_time3" value="{fun_get::get('s_time3')}" class='pTxtDate' onfocus="new Calendar().show(this);"> 到 <input type="text" name="s_time4" value="{fun_get::get('s_time4')}" class='pTxtDate' onfocus="new Calendar().show(this);"></li>
+<li>状态：<select name="s_state"><option value="0">不限</option><option value="1"{if(fun_get::get("s_state")=='1')} selected{/if}>未抽奖</option><option value="2"{if(fun_get::get("s_state")=='2')} selected{/if}>已抽奖</option></select></li>
+<li>关 键 字：<input type="text" id="s_key" name="s_key" value="{fun_get::get('s_key')}" class='pTxt1'>　<input type="button" name="btn_s_ok" value="查找" class="pBtn" onclick="admin.search();"> 　<input type="button" name="btn_s_clear" value="清空" class="pBtn" onclick="admin.clear_search();"></li>
+</table>
+</div>
+<div class="pMain" id="id_main">
+<div class="pTableBox" id="id_table_box">
+	<div class='pTableTit' id="id_table_title">
+		<li><span class="x_tit" style="width:25px">&nbsp;</span></li>
+		{foreach($arr_list["tabtit"] as $item)}
+			<li><span class="x_tit"{if($item["w"]>0)} style="width:{$item["w"]}px"{/if} onclick="admin.table.list1.sort('{$item['key']}')">{$item["name"]}
+			{if(isset($arr_list['sort'][$item['key']]))}<img src="images/sort_{$arr_list['sort'][$item['key']]}.png">{/if}</span><span class="x_split"></span></li>
+		{/if}
+	</div>
+	<div class="pTableList" id="id_table_list">
+		<div class='pTable' id="id_table">
+			{foreach($arr_list['list'] as $item)}
+			<div class='pTabRow'>
+				<li><input type='checkbox' name='selid[]' value="{$item['record_id']}"></li>
+				{foreach($arr_list["tabtd"] as $field)}
+					{if($field == 'record_title')}
+					<li><a href="./index.php?recordid={$item['record_id']}" target="_blank">{$item[$field]}</a></li>
+					{else}
+					<li>{if(empty($item[$field]))}&nbsp;{else}{$item[$field]}{/if}</li>
+					{/if}
+				{/foreach}
+			</div>
+			{/foreach}
+		</div>
+	</div>
+</div>
+</div>
+<div class="pPage" id="id_pPage">
+{$arr_list['pagebtns']}
+</div>
+<div class="pFootAct" id="id_pFootAct">
+<li>
+<label><input type='checkbox' name='selall' value='1'>全选</label>　
+<select name="selact" onchange="thisjs.changeact(this.value)" id="id_selact">
+	<option value="">--操作--</option>
+		{if($this_limit->chk_act("delete"))}<option value="delete">删除</option>{/if}
+	</select>
+	&nbsp;<input type="button" name="btnExe" value="执行" onclick="thisjs.selact();" class="pBtn">
+</li>
+</div>
+<script src="admin.table.js"></script>
+<script>
+//初始化表格控件
+kj.onload(function(){
+admin.table.list1.init('#id_table_title' , '#id_table');
+});
+//自动保存
+admin.table.list1.save_resize = function() {
+	var lng_w = (kj.w(this.field));
+	kj.ajax.get("common.php?app=config&app_module=user&dir={$app_dir}&app_act=save_resize&filename=vote&key=vote.award.record&index=" + this.fieldsindex + "&w=" + lng_w , function(data){
+		//alert(data);
+	});
+}
+admin.table.list1.sort = function(key) {
+	kj.ajax.get("common.php?app=config&app_module=user&dir={$app_dir}&app_act=sort&key=vote.award.record&filename=vote&sortby=" + key , function(data){
+			var obj_data=kj.json(data);
+			if(!obj_data.isnull) {
+				admin.refresh();
+			}
+	});
+}
+//当前页面js对象
+var thisjs = new function() {
+	this.selact = function(val) {
+		var act = kj.obj("#id_selact").value;
+		admin.selact();
+	}
+	this.changeact = function(val) {
+	}
+}
+function vote_item_callback(o) {
+	if("id" in o) {
+		kj.set("#id_url_item_id" , "value" , o.id);
+		admin.refresh();
+	}
+}
+{if($admin_item['id']<1)}
+kj.onload(function(){
+	var objx = kj.obj("#id_shop_user");
+	kj.windiv({'id':'item_user_windiv','fid':objx,'src':'common.php?app=vote&app_act=item'});
+	kj.handler("#windivitem_user_windiv_body","mouseout",function() {
+		kj.show(this.parentNode);
+		return;
+	});
+});
+{/if}
+
+
+</script>
+{include(footer)}

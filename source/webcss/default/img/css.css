@@ -1,0 +1,131 @@
+body{margin:0px auto;text-align:center;font-size:14px;font-family:"微软雅黑";width:100%;overflow-x:hidden}
+select{border-radius:0;font-size:16px;height:30px}
+div,li{text-align:left;overflow:hidden}
+ul,h1,h2,h3,p{margin:0px;padding:0px}
+li{list-style-type:none}
+img{border:0px}
+input{font-size:14px;}
+input[type="text"]{border:1px #ccc solid;padding:1px 2px}
+input{-webkit-appearance:none;border-radius:0;padding:0px;margin:0px}
+input[type="checkbox"]{-webkit-appearance:checkbox}
+input[type="radio"]{-webkit-appearance:radio}
+i{font-style:normal;}
+
+select,textarea,input{outline:0px}
+table{border-collapse: collapse}
+select,textarea,input{outline:0px}
+a:link {color:#000; text-decoration:none;}
+a:visited {color:#000;text-decoration:none;}
+a:hover {color:#000; text-decoration:none}
+a:active {color:#000;}
+.main{margin:0px auto;width:98%;overflow:visible}
+.top{float:left;width:100%}
+.top img{float:left;width:100%}
+.bottom{float:left;width:100%;margin-top:30px;border-top:1px #ddd dotted;padding-top:10px}
+.bottom span{float:left;width:100%;margin-top:10pxpx;color:#999;text-align:center;height:30px;font-size:11px;}
+
+.toolbar{width:100%;height:45px;position:fixed;bottom:0px;box-shadow: 0px 0px 5px rgba(0,0,0,0.4);background:#fff;z-index:99;font-size:12px}
+.toolbar a{float:left;width:25%;text-align:center;padding-top:27px}
+.toolbar .x1{background:url(menu1.png) no-repeat center 2px; background-size:25px;}
+.toolbar .x1a{background:url(menu1x.png) no-repeat center 2px;color:#813d36; background-size:25px;}
+.toolbar .x2{background:url(menu2.png) no-repeat center 4px; background-size:22px;}
+.toolbar .x2a{background:url(menu2x.png) no-repeat center 4px;color:#813d36; background-size:22px;}
+.toolbar .x3{background:url(menu3.png) no-repeat center 3px; background-size:21px;}
+.toolbar .x3a{background:url(menu3x.png) no-repeat center 3px;color:#813d36; background-size:21px;}
+.toolbar .x4{background:url(menu4.png) no-repeat center 3px; background-size:21px;}
+.toolbar .x4a{background:url(menu4x.png) no-repeat center 3px;color:#813d36; background-size:21px;}
+
+.div1{float:left;width:100%;margin-top:15px}
+.div1 .x1{float:left;width:60%;}
+.div1 .x1 .dropdown{float:left;width:50%;}
+.div1 .x1 label{float:left;height:24px;width:101px;font-size:12px;border:1px #ddd solid;border-radius:10px}
+.div1 .x1 label font{float:left;margin:3px 0px 0px 6px;width:64px;text-align:center}
+.div1 .x1 label i{float:right;width:9px;height:5px;background:url(ico1.png) no-repeat left center;margin:8px 8px 0px 0px}
+.div1 .x2{float:left;width:40%;overflow:hidden}
+.div1 .x2 input[type="text"]{float:left;width:90%;border:1px #ddd solid;height:22px;border-radius:10px;padding:1px 4px}
+.div1 .x2 input[type="button"]{float:right;width:30px;height:24px;background:url(icon_search.png) no-repeat center;background-size:18px;border:0px;margin:-25px 12px 0px 0px;clear:both}
+.main{float:left;width:98%;margin:0px 1%}
+.list{float:left;width:100%}
+.list li{float:left;width:48%;margin:10px 1%}
+.list li .x1{float:left;width:100%;text-align:center;overflow:hidden}
+.list li .x1 img{height:150px;max-width:184px}
+.list li span{float:left;width:100%;text-align:center;font-size:12px;margin:3px 0px}
+.list li span font{color:#fe5004}
+.list li span img{height:30px}
+.list li span .xbtn{float:left;width:40%;margin:0px 30%;background:#50973f;color:#fff;padding:5px 0px;border-radius:10px}
+.xiala{position:absolute;width:101px;border:1px #ddd solid;background:#fff}
+.xiala a{float:left;width:100%;border-bottom:1px #eee solid;text-align:center;font-size:12px;padding:5px 0px}
+
+.topback{float:left;padding:3px 10px;background:#50973f;border-radius:5px;color:#fff;margin:10px 0px 0px 1%}
+.topback a{color:#fff;}
+
+.kj_slider{float:left;width:100%;margin:10px 0px;height:300px;overflow:hidden}
+.kj_slider .xli{float:left;width:100%}
+.kj_slider .xli li{float:left;width:100%}
+.kj_slider .xli li img{width:100%;height:300px}
+.kj_slider .xbtn{float:left;width:auto;margin-top:-20px}
+.kj_slider .xbtn a{float:left;width:10px;height:10px;background:#fff;border-radius:10px;margin-right:10px;box-shadow: 0 0 5px #666 inset;}
+.kj_slider .xbtn a:hover{background:#ff3300;box-shadow: 0 0 5px #ccc inset}
+.kj_slider .xbtn .xsel{background:#ff3300;box-shadow: 0 0 5px #ccc inset}
+
+.detail{float:left;width:98%;margin:0px 1%;}
+.detail div{float:left;width:100%}
+.detail .xtit{border-bottom:1px #50973f dotted;padding-bottom:10px;color:#50973f;margin-top:10px;font-weight:bold}
+.detail .xcont{line-height:20px;margin-top:8px;color:#555}
+.detail .xinfo{margin-top:5px}
+.detail .xinfo span{float:left;width:50%;text-align:center;font-weight:bold;color:#626161}
+.detail .xinfo font{color:#fe5004}
+.detail .xbtn{margin-top:20px}
+.detail .xbtn span{float:left;width:50%;text-align:center;font-weight:bold;color:#626161}
+.detail .xbtn span img{max-width:70%}
+
+.sharepic{position:fixed;top:50px;right:50px;z-index:99;max-width:80%}
+
+.title{float:left;width:100%;margin:10px 0px;font-size:16px;font-weight:bold;color:#555;text-align:center}
+.cont{float:left;width:100%;margin:10px 0px;line-height:22px;color:#555}
+
+.detailpic{float:left;width:100%;height:300px;text-align:center;margin-top:10px}
+.detailpic img{max-width:100%;height:300px;}
+
+.init{float:left;width:100%;height:50px;}
+.init li{width:100px;margin:25px auto}
+.init img{float:left;margin-right:5px}
+.init font{float:left}
+
+.dtitle{float:left;width:100%;text-align:center;font-size:14px;padding:8px 0px;color:#666}
+.dtitle font{color:#fe5004;font-weight:bold}
+
+.editbox{float:left;width:100%;margin-top:10px;}
+.etit{float:left;width:100%;padding:5px 0px;background:url(bg.png);color:#fff;text-align:center}
+.editbox li{float:left;width:100%;margin:5px 0px}
+.editbox li label{float:left;width:19%;text-align:left;margin-left:1%}
+.editbox li span{float:left;width:80%}
+.editbox li span input[type='text']{border:1px #ccc solid;height:22px;width:90%;padding:2px}
+.editbox li span textarea{border:1px #ccc solid;height:100px;width:90%}
+.editbox .xstate{color:#ff3300;font-size:11px;text-align:center}
+.editbox .xbtn{width:40%;margin:0px 30%;border:1px #ddd solid;padding:8px 0px;text-align:center;border-radius:10px;background:#50973f;border:0px;color:#fff}
+.editbox .xpic{padding:5px 0px}
+.editbox .xpic div{float:left}
+.editbox .xpic div span{float:left;width:62px;height:62px;margin-left:10px}
+.editbox .xpic div span img{float:left;width:62px;height:62px}
+.editbox .xpic .xup{float:left;width:62px;height:62px;overflow:hidden;margin-left:10px}
+.btn1{border:0px;float:left;width:60%;margin:0px 20%;background:#50973f;color:#fff;padding:5px 0px;border-radius:10px}
+.btn2{border:0px;float:left;width:60%;margin:0px 20%;background:#ff8800;color:#fff;padding:5px 0px;border-radius:10px}
+
+.pm{float:left;width:96%;margin:10px 2% 0px 2%}
+.pm td{padding:5px 0px;color:#666}
+.pm .xtit td{font-weight:bold;border-bottom:1px #ddd dotted}
+
+.pmtj{float:left;width:100%;margin-top:10px}
+.pmtj li{float:left;width:33.3%;}
+.pmtj li font{float:left;width:70%;margin:0px 15%;background:#fe5004;color:#fff;text-align:center;padding:5px 0px;font-size:12px;border-radius:10px}
+
+.tips{position:absolute;width:88%;overflow:visible;z-index:5}
+.tips .xtit{float:left;width:100%;background:#f86464;padding:8px 0px;color:#fff;text-align:center;border-radius:5px;overflow:visible}
+.tips .xtit font{float:left;width:100%;text-align:center;overflow:visible;font-size:18px;margin-top:0px}
+.tips .xtit img{float:right;margin:-43px -10px 0px 0px;width:30px;cursor:pointer}
+.tips .xcont{float:left;width:90%;margin:0px 2%;background:#fff9ec;padding:20px 3%;font-size:14px;line-height:18px;color:#2c2c2c}
+.tips .xcont li{float:left;width:100%;text-align:left;margin-top:5px}
+.tips .xfooter{float:left;width:96%;margin:0px 2%;background:url(bg3.png) left center repeat-x;height:6px;background-size:100%}
+.tips .xbtn{float:left;width:90%;margin:0px 2%;background:#fff9ec;padding:10px 3%;background:#fff9ec}
+.tips .xbtn a{float:left;margin:0px 25%;width:50%;color:#fff;background:#ff8800;border-radius:10px;padding:7px 0px;text-align:center}

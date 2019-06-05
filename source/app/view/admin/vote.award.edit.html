@@ -1,0 +1,44 @@
+{include(header)}
+<style>
+.me_div1{float:left;width:500px}
+.me_div1 li{line-height:25px;float:left;width:500px;padding-bottom:10px;line-height:35px}
+.me_div2{float:left;clear:both}
+</style>
+<script>
+//保存时交验规则
+admin.rule['save'] =[];
+
+</script>
+<div class="pMenu" id="id_pMenu">
+	<li class="sel">基本信息</li>
+</div>
+<div class="pMain" id="id_main">
+<table class='pEditTable'>
+<tr class='pTabTitRow'><td class='pTabTitCol' colspan="2"></td></tr>
+<tr>
+	<td class="pTabColName">类型：</td><td class="pTabColVal"><select name="award_type">{foreach($arr_type as $item=>$key)}<option value="{$key}"{if($key==$editinfo['award_type'])} selected{/if}>{$item}</option>{/foreach}</select></td></tr>
+<tr>
+	<td class="pTabColName">奖品：</td><td class="pTabColVal"><input type="text" name="award_name" value="{$editinfo['award_name']}" class='pTxt1 pTxtL300' ruletips="奖品名称不能为空" ruletipsmode=1 required> <span style="color:#ff0000">*</span></td></tr>
+<tr>
+	<td class="pTabColName">数量：</td><td class="pTabColVal"><input type="text" name="award_num" value="{$editinfo['award_num']}" class='pTxt1 pTxtL150'></td></tr>
+<tr>
+	<td class="pTabColName">中奖机率：</td><td class="pTabColVal"><input type="text" name="award_rate" value="{$editinfo['award_rate']}" class='pTxt1 pTxtL100'> %&nbsp;<span class="pBeta">百分之几的机会中,可以有小数</span></td></tr>
+<tr>
+	<td class="pTabColName">每人限中：</td><td class="pTabColVal"><input type="text" name="award_user_num" value="{$editinfo['award_user_num']}" class='pTxt1 pTxtL100'>&nbsp;<span class="pBeta">不填写，则不限制</span></td></tr>
+<tr>
+	<td class="pTabColName">奖品图片：</td><td class="pTabColVal" style="line-height:40px"><input type="text" name="award_pic" id="id_award_pic" value="" class='pTxt1 pTxtL300'>&nbsp;<a href="javascript:kj.dialog({id:'dialog_attatch',title:'选择图片',url:'common.php?app=other&app_act=attatch&url_objid=id_award_pic',w:600,showbtnhide:false,type:'iframe'});">选择</a>&nbsp;<span class="pBeta">没有可以不填</span><br><iframe name="frm_THISID" src="common.php?app=other&app_act=upload&objid=url_THISID" width="300px" height="30px" frameborder=0 scrolling="no"></iframe></td></tr>
+</table>
+</div>
+<div class="pFootAct" id="id_pFootAct">
+	<li>
+	<input type="button" name="dosubmit" value="保存" onclick="admin.frm_ajax('save');" class="pBtn">
+	</li>
+</div>
+<script>
+var thisjs = new function() {
+}
+function attatch_callback() {
+	kj.dialog.close("#windialog_attatch");
+}
+</script>
+{include(footer)}

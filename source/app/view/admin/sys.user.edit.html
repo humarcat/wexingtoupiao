@@ -1,0 +1,22 @@
+{include(header)}
+<div class="pMenu" id="id_pMenu">
+	<li class="sel" onclick="admin.edittabel(0);">账号信息</li>
+</div>
+<div class="pMain" id="id_main">
+<table class='pEditTable'>
+<tr class='pTabTitRow'><td class='pTabTitCol' colspan="2"></td></tr>
+<tr>
+	<td class="pTabColName">用户名：</td><td class="pTabColVal"><input type="text" name="user_name" value="{$editinfo['user_name']}" class='pTxt1 pTxtL150'{if(!empty($editinfo['user_id']))} disabled{else} ruletips="用户名不能为空或格式不对"  rule='uname' ruletipsmode=1 required{/if}>{if(!empty($editinfo['user_id']))}&nbsp;&nbsp;<span class="pBeta">不能修改</span>{else}&nbsp;<span style="color:#ff0000">*</span>{/if}</td></tr>
+<tr>
+	<td class="pTabColName">密&nbsp;&nbsp;码：</td><td class="pTabColVal"><input type="password" name="user_pwd" value="" class='pTxt1 pTxtL150'>{if(!empty($editinfo['user_id']))}&nbsp;&nbsp;<span class="pBeta">为空则不修改密码</span>{else}&nbsp;<span style="color:#ff0000">*</span>{/if}</td>
+	</tr>
+<tr>
+	<td class="pTabColName">昵&nbsp;&nbsp;称：</td><td class="pTabColVal"><input type="text" name="user_netname" value="{$editinfo['user_netname']}" class='pTxt1 pTxtL150'></td></tr>
+</table>
+</div>
+<div class="pFootAct" id="id_pFootAct">
+	<li>
+	<input type="button" name="dosubmit" value="保存" onclick="admin.frm_ajax('save');" class="pBtn">
+	</li>
+</div>
+{include(footer)}

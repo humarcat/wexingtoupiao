@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{$obj_item['item_title']}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="img/css.css?rnd=<?php echo rand();?>"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+</head>
+<body>
+<a href="common.php?app=article&app_act=view&key=act_intro" style="position:absolute;top:20px;right:20px;width:auto"><img src="img/hdgz.png" style="width:50px;"></a>
+<div class="top"><img src="img/top.jpg?rnd=kdk"></div>
+<div class="pmtj"><li><font>总参赛：{$total['acts']}</font></li><li><font>总票数：{$total['votes']}</font></li><li><font>访问量：{$total['hits']}</font></li></div>
+<table class="pm">
+	<tr class="xtit"><td>排名</td><td>名称</td><td>票数</td></tr>
+	{foreach($arr_list as $item)}
+	<tr><td>{$item["pm"]}</td><td>{$item["act_name"]}</td><td>{$item["act_vote"]}</td></tr>
+	{/foreach}
+</table>
+{include(label.footer)}
+</body>
+</html>

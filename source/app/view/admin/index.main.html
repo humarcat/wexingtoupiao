@@ -1,0 +1,189 @@
+{include(header)}
+<table width="100%" style="margin:0px;padding:0px;">
+	<tr><td width="137px">&nbsp;</td><td style="padding-top:20px" valign="top">
+		<table width="1000px" style="margin:0px;padding:0px;">
+		<tr><td valign="top" style="width:430px">
+		<div class="main_list1" style="margin-top:100px">
+			<li><span>今日投票：<font>{$count_info['piao_num']}</font> 次 </span><span>累计投票：<font>{$count_info['piao_total']}</font></span></li>
+			<li><span>今日抽奖：<font>{$count_info['award_num']}</font> 次</span><span>累计抽奖：<font>{$count_info['award_total']}</font> 次</span></li>
+			<li><span>今日新增：<font>{$count_info['user_new']}</font> </span><span>会员总数：<font>{$count_info['user_num']}</font></span></li>
+		</div>
+		<div class="main_box1">
+			<li>您好，{$user->uname}</li>
+			<li class="x_line">&nbsp;</li>
+			<li>上次登录时间：{$login_info['lastlogintime']}<br>上次登录IP：{$login_info['loginip']}<br>登录总次数：{$login_info['loginnum']}</li>
+		</div>
+		<div class="main_box1">
+			<li style="width:220px"><b>系统版本信息</b><br>系统名称：<a href="javascript:thisjs.open_klkkdj()">{$version_info['name']}</a><br>当前版本：{$version_info['version_name']}<span id="id_version_new" style="color:#ff8800"></span><br>官方账号：{$version_info['web_uname']}&nbsp;&nbsp;<span style="color:#ff8800;cursor:pointer" id="id_new_msg" onclick="thisjs.ucenter();"><fotn style="color:#888">【消息中心】</font></span></li>
+		</div>
+		</td><td valign="top">
+		<div id="container" style="float:left;width:600px;height:300px">
+		</div>
+		<div id="container_user" style="float:left;width:600px;height:300px">
+		</div>
+		</td></tr>
+		</table>
+	</td></tr></table>
+<script src="/components/report/jquery.min.js"></script>
+<script>
+var thisjs = new function() {
+	this.update = function(com) {
+		kj.dialog({id:'update',title:'在线升级',url:'{fun_get::url(array("app_act"=>"update"))}&version='+thisjs.version,w:500,showbtnhide:false,showbtnmax:false,h:300,type:'iframe'});
+	}
+	this.klkkdj_logo = function() {
+		var url = this.get_klkkdj_url("app_act=logo&app=service");
+		var obj;
+		(parent.kj)? obj = parent.kj : obj = kj;
+		obj.dialog({'id':'klkkdj_help','type':'iframe','url':url , 'title':'更新日志','w':600,'showbtnmax':true,'notoolbar':'1'});
+	}
+	//生成官网链接字符串
+	this.get_klkkdj_url = function(url) {
+		url = kj.urlencode("{$klkkdj_url}" , url);
+		return url;
+	}
+	//生成官网链接字符串
+	this.open_klkkdj = function() {
+		var url = this.get_klkkdj_url();
+		window.open(url,"_blank");
+	}
+	this.open = function(title,url) {
+		parent.thisjs.klkkdj_open(title,url);
+	}
+	this.ucenter = function() {
+		parent.thisjs.klkkdj_open("KLKKDJ会员中心",'app_act=user');
+	}
+	this.go = function(url , act) {
+		var id,module,url;
+		var arr = parent.kj.obj("#id_left input");
+		for(var i = 0 ; i < arr.length ; i++) {
+			if(arr[i].value == url) {
+				id = arr[i].parentNode.id;
+				arr = id.split("_");
+				arr.removeat(1);
+				arr.removeat(0);
+				arr.removeat(arr.length-1);
+				module = arr.join("_");
+				break;
+			}
+		}
+		if(!id) return;
+		if(!act) act = "";
+		parent.thisjs.menu_click(id,module,url + act);
+	}
+
+}
+kj.onload(function(){
+	//授权级别信息
+	kj.ajax.get("{fun_get::url(array('app_act'=>'official_login'))}" , function(data){
+		var obj_data = kj.json(data);
+		if('code' in obj_data && obj_data.code=='0') {
+			var obj=kj.obj("#id_grade_info");
+			if(obj) obj.innerHTML = obj_data.grade.name;
+			thisjs.version = obj_data.version;
+			var version = kj.toint(obj_data.version);
+			var message = kj.toint(obj_data.message);
+			if(version>kj.toint("{$version_info['version']}")) {
+				obj = kj.obj("#id_version_new");
+				var html = "<br>最新版本：" + obj_data.version_name + "&nbsp;&nbsp;&nbsp;<a href=\"javascript:thisjs.update();\" style='color:#004499'>在线升级</a>&nbsp;&nbsp;&nbsp;<a href='javascript:thisjs.klkkdj_logo();' style='color:#004499'>了解详情</a>";
+				if(obj) obj.innerHTML = html;
+			}
+			if(message>0) {
+				kj.obj("#id_new_msg").innerHTML = message + "条未读消息";
+			}
+		}
+	});
+});
+$(function () {
+    var chart;
+    $(document).ready(function() {
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container',
+                type: 'line'
+            },
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: {$piao_report['sub']}
+			},
+            yAxis: {
+                title: {
+                    text: '今日投票'
+                }
+            },
+            tooltip: {
+                enabled: false,
+                formatter: function() {
+                    return '<b>'+ this.series.name +'</b><br/>'+
+                        this.x +': '+ this.y;
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [{
+                name: '合计：{$count_info['piao_num']}次，时间段(小时)',
+                data: {$piao_report['data']}
+            }]
+        });
+    });
+    
+});
+
+$(function () {
+    var chart;
+    $(document).ready(function() {
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container_user',
+                type: 'line'
+            },
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: {$award_report['sub']}
+            },
+            yAxis: {
+                title: {
+                    text: '今日抽奖'
+                }
+            },
+            tooltip: {
+                enabled: false,
+                formatter: function() {
+                    return '<b>'+ this.series.name +'</b><br/>'+
+                        this.x +': '+ this.y;
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [{
+                name: '合计：{$count_info['award_num']}次，时间段(小时)',
+                data: {$award_report['data']}
+            }]
+        });
+    });
+    
+});
+</script>
+<script src="/components/report/highcharts.js"></script>
+{include(footer)}

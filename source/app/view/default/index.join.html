@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>报名-{$obj_item['item_title']}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="img/css.css?rnd=<?php echo rand();?>"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+<script src="/common/js/kj.rule.js"></script>
+</head>
+<body>
+<div class="etit">请填写报名信息</div>
+<div class="main">
+<form name="frm_edit" method="post" action="?app_act=join.save&itemid={$obj_item['item_id']}">
+	<div class="editbox">
+		<li><label>分组：</label><span><select name="act_group">{foreach($arr_group as $item)}<option value="{$item['group_name']}"{if($item['group_name'] == $editinfo['act_group'])} selected{/if}>{$item['group_name']}</option>{/foreach}</select></span></li>
+		<li><label>名称：</label><span><input type="text" name="act_name" value="{$editinfo['act_name']}" class='pTxt1 pTxtL300' ruletips="姓名不能为空" ruletipsmode=0 required></span></li>
+		<li><label>编号：</label><span><input type="text" name="act_ext2" value="{$editinfo['act_ext2']}" class='pTxt1 pTxtL300'></span></li>
+		<li><label>介绍：</label><span><textarea name="act_beta">{$editinfo['act_beta']}</textarea></span></li>
+		<li><label>联系人：</label><span><input type="text" name="act_linkname" value="{$editinfo['act_linkname']}" class='pTxt1 pTxtL300' ruletips="联系人不能为空" ruletipsmode=0 required></span></li>
+		<li><label>联系电话：</label><span><input type="text" name="act_linktel" value="{$editinfo['act_linktel']}" class='pTxt1 pTxtL300' ruletips="联系电话不能为空或格式不正确" ruletipsmode=0 required rule="tel"></span></li>
+		<li class="xpic">
+			<div id="id_pic_list">
+			{foreach($editinfo['pics'] as $item)}
+				<span><img src="{$item}" onclick="thisjs.picdel(this);"><input type="hidden" name="pic[]" value="{$item}"></span>
+			{/foreach}
+			</div>
+			<span class='xup'><iframe name="frm_upload" id="frm_upload" src = "/common.php?app=other&app_act=upload&hidebtn=2&clip_w=1000" width="160px" height="210px" frameborder=0 scrolling="no"></iframe></span>
+		</li>
+		<li><input type="button" name="btnok" value="{if(!empty($editinfo['act_id']))}确认修改{else}确认申请{/if}" class="xbtn" onclick="thisjs.save();"></li>
+		{if(!empty($editinfo['act_id']))}<li class="xstate">状态：{$editinfo['state']}</li>{/if}
+	</div>
+</form>
+</div>
+{include(label.footer)}
+<script>
+function upload_callback(data) {
+	var obj = kj.json(data);
+	if(obj.isnull || !('url' in obj)) return;
+	thisjs.picurl = obj.url;
+	var html = '<img src = "' + obj.url + '" onclick="thisjs.picdel(this);"><input type="hidden" name="pic[]" value="'+obj.url+'">';
+	var objspan=document.createElement("span");
+	objspan.innerHTML = html;
+	kj.obj("#id_pic_list").appendChild(objspan);
+}
+var thisjs = new function() {
+	this.picdel = function(obj) {
+		kj.remove(kj.parent(obj,"span"));
+	}
+	this.save = function() {
+		{if(!empty($editinfo['act_id']))}
+			if(!confirm("修改后，将需要重新审核才会显示，确认继续吗？")) return;
+		{/if}
+		if(kj.rule.form(document.frm_edit) == false) {
+			return false;
+		}
+		kj.ajax.post(document.frm_edit,function(data) {
+			var obj = kj.json(data);
+			if(obj.isnull) {
+				alert("系统繁忙");
+				return;
+			}
+			if(obj.code == '0') {
+				kj.alert.show("申请成功，请等待审核",function(){window.open('?itemid={$obj_item['item_id']}');});
+			} else {
+				alert(obj.msg);
+			}
+		});
+	}
+}
+</script>
+</body>
+</html>
